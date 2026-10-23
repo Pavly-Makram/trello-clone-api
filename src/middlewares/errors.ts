@@ -7,7 +7,7 @@ export const NotFound = (req: Request, res: Response, next: NextFunction): void 
 };
 
 export const errorHandler: ErrorRequestHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
-    const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+    const statusCode = err.statusCode || (res.statusCode === 200 ? 500 : res.statusCode);
 
     if (process.env.NODE_ENV !== "production") {
         console.error("Error Log:", err);
