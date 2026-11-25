@@ -26,7 +26,7 @@ export const createActivity = async (data: CreateActivityInput, userId: number) 
         if (!card.list.board) throw new HttpError(404, "Board not found");
 
         if (card.list.boardId !== boardId) {
-            throw new HttpError(403, "Can not ");
+            throw new HttpError(403, "Error");
         }
     }
 

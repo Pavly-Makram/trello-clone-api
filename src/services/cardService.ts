@@ -73,6 +73,7 @@ export const getAllCards = async (data: GetCardsQueryInput) => {
 /**
  * @description Get card details with assignees and comments (cached in Redis)
  */
+
 export const getCardById = async (cardId: number) => {
     const cacheKey = getCardCacheKey(cardId);
 
