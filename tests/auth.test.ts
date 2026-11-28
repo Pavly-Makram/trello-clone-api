@@ -31,7 +31,9 @@ describe("Auth Controller - Real Integration Tests", () => {
 
             expect(response.status).toBe(201);
             expect(response.body.message).toBe("User registered successfully");
-            expect(response.body).toHaveProperty("token");
+            expect(response.body).toHaveProperty("accessToken");
+            expect(response.body).not.toHaveProperty("refreshToken");
+            expect(response.headers["set-cookie"]?.[0]).toContain("HttpOnly");
             expect(response.body.user).toHaveProperty("id");
             expect(response.body.user.email).toBe(validUser.email);
             expect(response.body.user).not.toHaveProperty("password");
@@ -99,7 +101,9 @@ describe("Auth Controller - Real Integration Tests", () => {
 
             expect(response.status).toBe(200);
             expect(response.body.message).toBe("Login successful");
-            expect(response.body).toHaveProperty("token");
+            expect(response.body).toHaveProperty("accessToken");
+            expect(response.body).not.toHaveProperty("refreshToken"); 
+            expect(response.headers["set-cookie"]?.[0]).toContain("HttpOnly");
             expect(response.body.user.email).toBe(registeredUser.email);
             expect(response.body.user).not.toHaveProperty("password");
         });

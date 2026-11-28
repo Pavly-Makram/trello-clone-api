@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import prisma from "../config/prisma";
+import { ENV } from "../config/env";
 
 export interface UserPayload extends JwtPayload {
     id: number;
@@ -31,8 +32,12 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
     }
 
     try {
-        const secret = process.env.JWT_SECRET || process.env.JWT_SECRET_KEY || "default_super_secret_key";
-        const decoded = jwt.verify(token, secret) as UserPayload;
+        const secret = ENV
+        const decoded = jwt.verify(token, secret.JWT_SECRET, {
+            algorithms: ["HS256"],
+            issuer: secret.JWT_ISSUER,
+            audience: secret.JWT_AUDIENCE,
+        }) as UserPayload;
         req.user = decoded;
         next();
     } catch (error) {

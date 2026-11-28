@@ -36,3 +36,21 @@ export const apiLimiter = rateLimit({
         message: "Too many requests from this IP, please try again after 15 minutes.",
     },
 });
+
+
+export const refreshLimiter = rateLimit({
+    skip: () => isTestEnv,
+    windowMs: 15 * 60 * 1000,
+    limit: 30,
+    standardHeaders: true,
+    legacyHeaders: false,
+    store: new RedisStore({
+        sendCommand: (...args: string[]) => redis.call(args[0], ...args.slice(1)) as any,
+        prefix: "rl:refresh:",
+    }),
+    message: {
+        status: "fail",
+        message: "Too many refresh attempts. Please try again later.",
+    },
+});
+

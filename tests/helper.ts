@@ -1,6 +1,8 @@
 import prisma from "../src/config/prisma";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
+import { ENV } from "../src/config/env";
 
 export const cleanDatabase = async () => {
     await prisma.activityLog.deleteMany();
@@ -26,8 +28,17 @@ export const createTestUser = async (customEmail?: string, customUsername?: stri
         },
     });
 
-    const secret = process.env.JWT_SECRET || "default_super_secret_key";
-    const token = jwt.sign({ id: user.id, email: user.email }, secret, { expiresIn: "1d" });
+    const token = jwt.sign(
+        { id: user.id, email: user.email },
+        ENV.JWT_SECRET,
+        {
+            algorithm: "HS256",
+            expiresIn: "1d",
+            jwtid: crypto.randomUUID(),
+            issuer: ENV.JWT_ISSUER,
+            audience: ENV.JWT_AUDIENCE,
+        }
+    );
 
     return { user, token };
 };

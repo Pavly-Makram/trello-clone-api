@@ -17,16 +17,25 @@ import logger from './middlewares/logger';
 import cors from 'cors';
 import helmet from 'helmet';
 
+
+import cookieParser from 'cookie-parser';
+import { ENV } from './config/env';
+
+
 dotenv.config();
 
 const app: Application = express();
 
 app.use(express.json());
-
+app.use(cookieParser());
 
 
 // Security
-app.use(cors());
+app.use(cors({
+    origin: ENV.CLIENT_URL, 
+    credentials: true,
+}));
+
 app.use(helmet({ contentSecurityPolicy: false, }));
 
 
